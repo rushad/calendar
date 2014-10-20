@@ -86,12 +86,6 @@ describe("Calendar: ", function(){
     assert.equal(cal.jqCalendar().css("top"), cal.y + "px");
   });
 
-  it("should set focus on newly created calendar element", function(){
-    var cal = new Calendar();
-    console.log($(":focus").length);
-//    assert.equal(cal.jqCalendar(), $(document.activeElement));
-  });
-
   it("should fill initial date in frame", function(){
     var date = new Date();
     var cal = new Calendar(0, 0, date);
