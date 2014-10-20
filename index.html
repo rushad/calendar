@@ -4,37 +4,37 @@
 <head>
   <meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
-  
+
 	<title>Calendar</title>
-  
+
   <script src="jquery.js"></script>
 	<script type="text/javascript" src="calendar.js"></script>
 	<script type="text/javascript" src="month.js"></script>
 	<link rel="stylesheet" type="text/css" href="calendar.css">
   <script type="text/javascript">
-    $(document).ready(function() {
-    
+    $(document).ready(function(){
+
       var date1 = new Date();
       var date2 = new Date(1972, 4, 8);
-      
+
       $("#date1").text("--/--/----");
       $("#date2").text("--/--/----");
-      
-      $("#date1").click(function() {
-        Calendar("calendar1", date1, $("#date1"), function(ok, date) {
-          if (ok) {
-            $("#date1").text(date.toLocaleDateString());
-            date1 = date;
-          }
-        });
+
+      $("#date1").click(function(){
+        var pos = $(this).position();
+        var calendar = new Calendar(pos.left, pos.top + $(this).height(), date1/*,
+          function(ok){
+            if (ok)
+              $("#date1").text(this.date.toLocaleDateString());
+        }*/);
       });
 
-      $("#date2").click(function() {
-        Calendar("calendar2", date2, $("#date2"), function(ok, date) {
-          if (ok) {
-            $("#date2").text(date.toLocaleDateString());
-            date2 = date;
-          }
+      $("#date2").click(function(){
+        var pos = $(this).position();
+        var calendar = new Calendar(pos.left, pos.top + $(this).height(), date2,
+          function(ok){
+            if (ok)
+              $("#date2").text(this.date.toLocaleDateString());
         });
       });
     });
@@ -43,7 +43,7 @@
 
 <body>
   <p>Choose date #1: <b><span id="date1"></span></b></p>
-  <p style="margin: 200px;" >Choose date #2: <b><span id="date2"></span></b></p>
+  <p style="margin: 200px;">Choose date #2: <b><span id="date2"></span></b></p>
 </body>
 
 </html>

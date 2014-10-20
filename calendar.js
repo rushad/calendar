@@ -1,118 +1,99 @@
-﻿var K_ESC = 27;
-var MONTH_NAMES = [ "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December" ];
+﻿function Calendar(x, y, _date, completionHandler){
 
-function Calendar(_calendarId, _date, element, _completionHandler) {
+  function S4() {
+    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+  }
 
-  if ($("#" + _calendarId).length)
-    return null;
-  
-  var frame = $(" \
-    <div id='" + _calendarId + "' class='calendar' tabindex='0'> \
-      <div id='calendar_current'> \
-      </div> \
-      <div id='calendar_nav'> \
-        <span id='calendar_nav_left'>◄</span> \
-        <span id='calendar_nav_title'></span> \
-        <span id='calendar_nav_right'>►</span> \
-      </div> \
-    </div> \
-  ");
-  
-  var pos = element.position();
-  frame.css("left", pos.left + "px");
-  frame.css("top", (pos.top + element.height()) + "px");
-  
-  $("body").append(frame);
-  
-  var current = $("#" + _calendarId + " #calendar_current");
-  current.text(_date.toDateString());
+  var date = (_date ? _date : new Date());
 
-  var context = {
-    calendarId: _calendarId,
-    curDate: _date,
-    date: _date,
-    completionHandler: _completionHandler,
-    calendar: $("#" + _calendarId),
-    nav: $("#" + _calendarId + " #calendar_nav"),
-    navLeft: $("#" + _calendarId + " #calendar_nav_left"),
-    navRight: $("#" + _calendarId + " #calendar_nav_right"),
-    navTitle: $("#" + _calendarId + " #calendar_nav_title"),
+  var calendar = {
+    id: (S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-"
+      + S4() + S4() + S4()).toLowerCase(),
+    x: x,
+    y: y,
+    initialDate: date,
+    date: date,
+    completionHandler: completionHandler,
+
+    jqCalendar: function(){
+      return $("#" + this.id);
+    },
+
+    jqInitialDate: function(){
+      return $("#" + this.id + " #ru_rushad_calendar_initial_date");
+    },
+
+    jqLeft: function(){
+      return $("#" + this.id + " #ru_rushad_calendar_left");
+    },
+
+    jqRight: function(){
+      return $("#" + this.id + " #ru_rushad_calendar_right");
+    },
+
+    jqTitle: function(){
+      return $("#" + this.id + " #ru_rushad_calendar_title");
+    },
+
+    init: function(){
+      var frame = $(" \
+        <div id='" + this.id + "' class='ru_rushad_calendar' tabindex='0'> \
+          <div id='ru_rushad_calendar_initial_date'> \
+          </div> \
+          <div> \
+            <span id='ru_rushad_calendar_left'>◄</span> \
+            <span id='ru_rushad_calendar_title'></span> \
+            <span id='ru_rushad_calendar_right'>►</span> \
+          </div> \
+        </div> \
+      ");
+
+      frame.css("left", this.x + "px");
+      frame.css("top", this.y + "px");
+
+      $("body").append(frame);
+
+      this.jqInitialDate().text(this.initialDate.toDateString());
+      this.jqInitialDate().hover(function(){
+        $(this).css("text-decoration", "underline");
+      }, function(){
+        $(this).css("text-decoration", "none");
+      });
+
+      var navigation = this.jqLeft().add(this.jqRight()).add(this.jqTitle());
+      navigation.hover(function(){
+        $(this).css("color", "blue");
+      }, function(){
+        $(this).css("color", "black");
+      });
+
+      this.jqInitialDate().click(this, function(event){
+        var self = event.data;
+        self.close();
+      });
+
+      this.jqCalendar().keydown(this, function(event){
+        if (event.which == 27){
+          var self = event.data;
+          self.close();
+        }
+      });
+
+      this.jqCalendar().focus();
+    },
+
+    close: function(){
+      if (this.completionHandler)
+        this.completionHandler(false, this.initialDate);
+      this.jqCalendar().remove();
+    }
+
   };
 
-  current.hover(function() {
-      $(this).css("text-decoration", "underline");
-    }, function() {
-      $(this).css("text-decoration", "none");
-  });
-  
-  current.click(close);
-  
-  context.navLeft.hover(function() {
-      $(this).css("color", "blue");
-    }, function() {
-      $(this).css("color", "black");
-  });
-  
-  context.navLeft.click(function(event) {
-    var monthSelector = $("#" + context.calendarId + " .month");
-    if (monthSelector.is(":animated"))
-      return;
-    monthSelector.removeClass("month");
-    monthSelector.addClass("movingleft");
-    monthSelector.animate({"margin-left": "-110%"}, "fast", function() {
-      $(this).remove();
-    });
-    context.date = prevMonth(context.date);
-    fillMonth(context, -1);
-  });
+  calendar.init();
 
-  context.navRight.hover(function() {
-      $(this).css("color", "blue");
-    }, function() {
-      $(this).css("color", "black");
-  });
-
-  context.navRight.click(function(event) {
-    var monthSelector = $("#" + context.calendarId + " .month");
-    if (monthSelector.is(":animated"))
-      return;
-    monthSelector.removeClass("month");
-    monthSelector.addClass("movingright");
-    monthSelector.animate({"margin-right": "-110%"}, "fast", function() {
-      $(this).remove();
-    });
-    context.date = nextMonth(context.date);
-    fillMonth(context, 1);
-  });
-
-  context.navTitle.hover(function() {
-      $(this).css("color", "blue");
-    }, function() {
-      $(this).css("color", "black");
-  });
-
-  context.calendar.keydown(function(event) {
-    if (event.which == K_ESC) {
-      close();
-    }
-  });
-  
-  fillMonth(context, 0);
-  
-  context.calendar.focus();
-
-  var width = context.calendar.width();
-  var height = context.calendar.height();
-  
-  context.calendar.css("width", "0");
-  context.calendar.css("height", "0");
-  context.calendar.animate({"width": width, "height": height}, "fast");
-  
-  function close() {
-    context.calendar.animate({"width": 0, "height": 0}, "fast", function() {
-      context.calendar.remove();
-      context.completionHandler(false, context.curDate);
-    });
-  }
+  return calendar;
 }
+
+if (typeof module !== "undefined")
+  module.exports = Calendar;

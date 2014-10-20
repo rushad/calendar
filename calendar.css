@@ -1,4 +1,4 @@
-﻿.calendar {
+﻿.ru_rushad_calendar {
   position: absolute;
   background-color: whitesmoke;
   border-style: solid;
@@ -41,7 +41,7 @@ table {
   margin-top: 5px;
 }
 
-#calendar_current {
+#ru_rushad_calendar_initial_date {
   padding: 5px;
   margin-bottom: 5px;
   font-size: 0.7em;
@@ -49,17 +49,17 @@ table {
   color: blue;
 }
 
-#calendar_nav_title {
+#ru_rushad_calendar_title {
   cursor: pointer;
 }
 
-#calendar_nav_left {
+#ru_rushad_calendar_left {
   float: left;
   width: 20px;
   cursor: pointer;
 }
 
-#calendar_nav_right {
+#ru_rushad_calendar_right {
   float: right;
   width: 20px;
   cursor: pointer;
