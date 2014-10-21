@@ -34,7 +34,7 @@ describe("Calendar: ", function(){
     assert.equal(cal.completionHandler, handler);
   });
 
-  it("should set initialDate to current date if not passed", function(){
+  it("should set default initialDate to current date", function(){
     var cal = new Calendar();
     assert.equal(cal.initialDate.toDateString(), new Date().toDateString());
   });
@@ -120,8 +120,7 @@ describe("Calendar: ", function(){
   });
 
   it("should close when initial date element is clicked", function(){
-    var cal1 = new Calendar(0, 0, new Date(), function(r, d){
-    });
+    var cal1 = new Calendar();
     var cal2 = new Calendar();
 
     cal1.jqInitialDate().click();
@@ -131,13 +130,15 @@ describe("Calendar: ", function(){
   });
 
   it("should close when ESC clicked", function(){
-    var cal = new Calendar();
+    var cal1 = new Calendar();
+    var cal2 = new Calendar();
 
     var event = $.Event("keydown");
     event.which = 27;
-    cal.jqCalendar().trigger(event);
+    cal1.jqCalendar().trigger(event);
 
-    assert.equal(cal.jqCalendar().length, 0);
+    assert.equal(cal1.jqCalendar().length, 0);
+    assert.notEqual(cal2.jqCalendar().length, 0);
   });
 
   it("shouldn't throw when completion handler is not set", function(){

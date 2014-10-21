@@ -1,4 +1,4 @@
-﻿.ru_rushad_calendar {
+﻿.ru_rushad_calendar{
   position: absolute;
   background-color: whitesmoke;
   border-style: solid;
@@ -16,19 +16,11 @@
   overflow: hidden;
 }
 
-.month, .movingleft, .movingright {
+.ru_rushad_calendar_month{
   position: relative;
 }
 
-.movingleft {
-  float: left;
-}
-
-.movingright{
-  float: right;
-}
-
-.month th, .movingleft th, .movingright th {
+.ru_rushad_calendar_month th {
   font-weight: normal;
   width: 14.28%;
   padding-left: 3px;

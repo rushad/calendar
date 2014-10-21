@@ -1,3 +1,9 @@
+var Month;
+if (typeof module !== "undefined")
+  Month = require("./month.js");
+
+var K_ESC = 27;
+
 ﻿function Calendar(x, y, _date, completionHandler){
 
   function S4() {
@@ -73,7 +79,7 @@
       });
 
       this.jqCalendar().keydown(this, function(event){
-        if (event.which == 27){
+        if (event.which == K_ESC){
           var self = event.data;
           self.close();
         }
@@ -91,6 +97,9 @@
   };
 
   calendar.init();
+
+  var mon = new Month(calendar.jqCalendar(), calendar.date, calendar.initialDate);
+  calendar.jqTitle().text(mon.title());
 
   return calendar;
 }
