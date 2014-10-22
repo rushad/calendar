@@ -57,6 +57,11 @@ describe("Month: ", function(){
     assert.equal($("#id2 .ru_rushad_calendar_month").length, 0);
   });
 
+  it("jqMonth() should return jQuery selector for month frame element", function(){
+    var mon = new Month(container1, new Date(), new Date());
+    assert.equal(mon.jqMonth().is($("#" + mon.id)), true);
+  });
+
   it("should throw if month element already exists in calendar element", function(){
     new Month(container1, new Date(), new Date());
     assert.throws(function(){
@@ -90,5 +95,14 @@ describe("Month: ", function(){
     var date = new Date(1972, 4, 8);
     var mon = new Month(container1, date, date);
     assert.equal($("#id1 #td31").css("color"), "blue");
+  });
+
+  it("day should be shadowed when mouse is over", function(){
+    var date = new Date();
+    var mon = new Month(container1, date, date);
+    $("#id1 #td11").mouseenter();
+    assert.equal($("#id1 #td11").css("box-shadow"), "2px 2px 5px #888888");
+    $("#id1 #td11").mouseleave();
+    assert.equal($("#id1 #td11").css("box-shadow"), "none");
   });
 });

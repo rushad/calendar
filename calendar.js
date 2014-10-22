@@ -1,25 +1,26 @@
-var Month;
+var Util;
+var View;
 if (typeof module !== "undefined")
-  Month = require("./month.js");
+{
+  Util = require("./util.js");
+  View = require("./view.js");
+}
 
 var K_ESC = 27;
 
 ﻿function Calendar(x, y, _date, completionHandler){
 
-  function S4() {
-    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-  }
-
   var date = (_date ? _date : new Date());
+  var ViewType = {MONTH: 1};
 
   var calendar = {
-    id: (S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-"
-      + S4() + S4() + S4()).toLowerCase(),
+    id: Util().UUID(),
     x: x,
     y: y,
     initialDate: date,
     date: date,
     completionHandler: completionHandler,
+    view: null,
 
     jqCalendar: function(){
       return $("#" + this.id);
@@ -73,17 +74,27 @@ var K_ESC = 27;
         $(this).css("color", "black");
       });
 
-      this.jqInitialDate().click(this, function(event){
-        var self = event.data;
+      var self = this;
+      this.jqLeft().click(function(){
+        self.date = self.view.goPrev();
+      });
+
+      this.jqInitialDate().click(function(event){
         self.close();
       });
 
-      this.jqCalendar().keydown(this, function(event){
+      this.jqCalendar().keydown(function(event){
         if (event.which == K_ESC){
-          var self = event.data;
           self.close();
         }
       });
+
+      this.view = new View(ViewType.MONTH, this.jqCalendar(), this.jqTitle(), this.date, this.initialDate,
+        function(date){
+          self.jqCalendar().remove();
+          if (self.completionHandler)
+            self.completionHandler(true, date);
+        });
 
       this.jqCalendar().focus();
     },
@@ -97,9 +108,6 @@ var K_ESC = 27;
   };
 
   calendar.init();
-
-  var mon = new Month(calendar.jqCalendar(), calendar.date, calendar.initialDate);
-  calendar.jqTitle().text(mon.title());
 
   return calendar;
 }

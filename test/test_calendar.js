@@ -45,35 +45,35 @@ describe("Calendar: ", function(){
     assert.equal($(".ru_rushad_calendar").attr("id"), cal.id);
   });
 
-  it("jqCalendar should return jQuery selector for calendar frame element", function(){
+  it("jqCalendar() should return jQuery selector for calendar frame element", function(){
     var cal1 = new Calendar();
     var cal2 = new Calendar();
     assert.equal(cal1.jqCalendar().is($("#" + cal1.id)), true);
     assert.notEqual(cal1.jqCalendar().is($("#" + cal2.id)), true);
   });
 
-  it("jqInitialDate should return jQuery selector for initial date element", function(){
+  it("jqInitialDate() should return jQuery selector for initial date element", function(){
     var cal1 = new Calendar();
     var cal2 = new Calendar();
     assert.equal(cal2.jqInitialDate().is($("#" + cal2.id + " #ru_rushad_calendar_initial_date")), true);
     assert.notEqual(cal2.jqInitialDate().is($("#" + cal1.id + " #ru_rushad_calendar_initial_date")), true);
   });
 
-  it("jqLeft should return jQuery selector for left arrow element", function(){
+  it("jqLeft() should return jQuery selector for left arrow element", function(){
     var cal1 = new Calendar();
     var cal2 = new Calendar();
     assert.equal(cal1.jqLeft().is($("#" + cal1.id + " #ru_rushad_calendar_left")), true);
     assert.notEqual(cal1.jqLeft().is($("#" + cal2.id + " #ru_rushad_calendar_left")), true);
   });
 
-  it("jqRight should return jQuery selector for right arrow element", function(){
+  it("jqRight() should return jQuery selector for right arrow element", function(){
     var cal1 = new Calendar();
     var cal2 = new Calendar();
     assert.equal(cal2.jqRight().is($("#" + cal2.id + " #ru_rushad_calendar_right")), true);
     assert.notEqual(cal1.jqRight().is($("#" + cal2.id + " #ru_rushad_calendar_right")), true);
   });
 
-  it("jqTitle should return jQuery selector for title element", function(){
+  it("jqTitle() should return jQuery selector for title element", function(){
     var cal1 = new Calendar();
     var cal2 = new Calendar();
     assert.equal(cal1.jqTitle().is($("#" + cal1.id + " #ru_rushad_calendar_title")), true);
@@ -161,4 +161,38 @@ describe("Calendar: ", function(){
     assert.equal(res, false);
     assert.equal(resDate, date);
   });
+
+  it("should close when day is selected", function(){
+    var date = new Date(1972, 4, 8);
+    var cal1 = new Calendar(0, 0, new Date());
+    var cal2 = new Calendar(0, 0, new Date());
+
+    $("#" + cal1.id + " #td31").click();
+
+    assert.equal(cal1.jqCalendar().length, 0);
+    assert.notEqual(cal2.jqCalendar().length, 0);
+  });
+
+  it("shouldn't throw when completion handler is not set", function(){
+    var cal = new Calendar();
+    assert.doesNotThrow(function(){
+      $("#" + cal.id + " #td31").click();
+    });
+  });
+
+  it("should pass true and selected date to completion handler when day is selected", function()
+  {
+    var date = new Date(1972, 4, 1);
+    var result, selectedDate;
+    var cal = new Calendar(0, 0, date, function(ok, date){
+      result = ok;
+      selectedDate = date;
+    });
+
+    $("#" + cal.id + " #td31").click();
+
+    assert.equal(result, true);
+    assert.equal(selectedDate.getTime(), new Date(1972, 4, 8).getTime());
+  });
+
 });

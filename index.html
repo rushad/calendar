@@ -3,14 +3,16 @@
 
 <head>
   <meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
 
-	<title>Calendar</title>
+  <title>Calendar</title>
 
   <script src="jquery.js"></script>
-	<script type="text/javascript" src="calendar.js"></script>
-	<script type="text/javascript" src="month.js"></script>
-	<link rel="stylesheet" type="text/css" href="calendar.css">
+  <script type="text/javascript" src="calendar.js"></script>
+  <script type="text/javascript" src="month.js"></script>
+  <script type="text/javascript" src="util.js"></script>
+  <script type="text/javascript" src="view.js"></script>
+  <link rel="stylesheet" type="text/css" href="calendar.css">
   <script type="text/javascript">
     $(document).ready(function(){
 
@@ -22,19 +24,23 @@
 
       $("#date1").click(function(){
         var pos = $(this).position();
-        var calendar = new Calendar(pos.left, pos.top + $(this).height(), date1/*,
-          function(ok){
-            if (ok)
-              $("#date1").text(this.date.toLocaleDateString());
-        }*/);
+        var calendar = new Calendar(pos.left, pos.top + $(this).height(), date1,
+          function(ok, date){
+            if (ok){
+              $("#date1").text(date.toLocaleDateString());
+              date1 = date;
+            }
+        });
       });
 
       $("#date2").click(function(){
         var pos = $(this).position();
         var calendar = new Calendar(pos.left, pos.top + $(this).height(), date2,
-          function(ok){
-            if (ok)
-              $("#date2").text(this.date.toLocaleDateString());
+          function(ok, date){
+            if (ok){
+              $("#date2").text(date.toLocaleDateString());
+              date2 = date;
+            }
         });
       });
     });

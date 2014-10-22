@@ -1,7 +1,13 @@
+var Util;
+if (typeof module !== "undefined")
+{
+  Util = require("./util.js");
+}
+
 var MONTH_NAMES = [ "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December" ];
 
-function Month(container, date, initialDate)
+function Month(container, date, initialDate, completionHandler)
 {
   if (!container || !container.is || !container.is(".ru_rushad_calendar"))
     throw "Month: wrong calendar element";
@@ -16,13 +22,15 @@ function Month(container, date, initialDate)
     throw "Month: already exists";
 
   var month = {
+    id: Util().UUID(),
     container: container,
     date: date,
     initialDate: initialDate,
+    completionHandler: completionHandler,
 
     init: function(){
       var frame = $(" \
-        <div class='ru_rushad_calendar_month'> \
+        <div id='" + this.id + "' class='ru_rushad_calendar_month'> \
           <table> \
             <thead> \
               <th>Mo<th>Tu<th>We<th>Th<th>Fr<th>Sa<th>Su \
@@ -44,6 +52,10 @@ function Month(container, date, initialDate)
 
     title: function(){
       return (MONTH_NAMES[this.date.getMonth()] + ", " + this.date.getFullYear());
+    },
+
+    jqMonth: function(){
+      return $("#" + this.id);
     },
 
     ﻿addDays: function(date, days) {
@@ -68,12 +80,11 @@ function Month(container, date, initialDate)
             daySelector.css("color", "blue");
             daySelector.css("font-weight", "bold");
           }
-/*          daySelector.click(function(){
-            context.calendar.remove();
+          daySelector.click(this, function(event){
             var selDate = new Date();
             selDate.setTime($(this).attr("date"));
-            context.completionHandler(true, new Date(parseInt($(this).attr("date"))));
-          });*/
+            event.data.completionHandler(selDate);
+          });
           daySelector.hover(function(){
               $(this).css("box-shadow", "2px 2px 5px #888888");
               $(this).css("background-color", "white");
@@ -84,7 +95,20 @@ function Month(container, date, initialDate)
           dateIterator = this.addDays(dateIterator, 1);
         }
       }
+    },
+
+    close: function(){
+      this.jqMonth().remove();
+    },
+
+    prev: function(date)
+    {
+      var newDate = new Date(date.getTime());
+      newDate.setDate(1);
+      newDate.setTime(newDate.getTime() - 1*24*60*60*1000);
+      return newDate;
     }
+
   };
 
   month.init(date);
