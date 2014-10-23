@@ -1,23 +1,38 @@
-﻿.ru_rushad_calendar{
-  position: absolute;
+﻿.ru_rushad_calendar {
   background-color: whitesmoke;
-  border-style: solid;
   border-color: lightgray;
+  border-style: solid;
   border-width: 1px;
   box-shadow: 10px 10px 5px #888888;
-  text-align: center;
+  cursor: default;
+  overflow: hidden;
   padding: 5px;
+  position: absolute;
+  text-align: center;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  overflow: hidden;
 }
 
-.ru_rushad_calendar_month{
-  position: relative;
+.ru_rushad_calendar_view {
+  margin-top: 5px;
+}
+
+.ru_rushad_calendar td {
+  cursor: pointer;
+}
+
+.ru_rushad_calendar_year, .ru_rushad_calendar_decade {
+  height: 100%;
+  width: 100%;
+}
+
+.ru_rushad_calendar_year table, .ru_rushad_calendar_decade table {
+  height: 100%;
+  width: 100%;
 }
 
 .ru_rushad_calendar_month th {
@@ -25,12 +40,6 @@
   width: 14.28%;
   padding-left: 3px;
   padding-right: 3px;
-}
-
-table {
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 5px;
 }
 
 #ru_rushad_calendar_initial_date {

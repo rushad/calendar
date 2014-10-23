@@ -1,20 +1,15 @@
-var Util;
-var View;
 if (typeof module !== "undefined")
 {
   Util = require("./util.js");
   View = require("./view.js");
 }
 
-var K_ESC = 27;
-
-﻿function Calendar(x, y, _date, completionHandler){
+function Calendar(x, y, _date, completionHandler){
 
   var date = (_date ? _date : new Date());
-  var ViewType = {MONTH: 1};
 
   var calendar = {
-    id: Util().UUID(),
+    id: Util.UUID(),
     x: x,
     y: y,
     initialDate: date,
@@ -24,6 +19,10 @@ var K_ESC = 27;
 
     jqCalendar: function(){
       return $("#" + this.id);
+    },
+
+    jqView: function(){
+      return $("#" + this.id + " .ru_rushad_calendar_view");
     },
 
     jqInitialDate: function(){
@@ -45,13 +44,13 @@ var K_ESC = 27;
     init: function(){
       var frame = $(" \
         <div id='" + this.id + "' class='ru_rushad_calendar' tabindex='0'> \
-          <div id='ru_rushad_calendar_initial_date'> \
-          </div> \
+          <div id='ru_rushad_calendar_initial_date'></div> \
           <div> \
             <span id='ru_rushad_calendar_left'>◄</span> \
             <span id='ru_rushad_calendar_title'></span> \
             <span id='ru_rushad_calendar_right'>►</span> \
           </div> \
+          <div id='" + this.id + "' class='ru_rushad_calendar_view'></div> \
         </div> \
       ");
 
@@ -75,8 +74,17 @@ var K_ESC = 27;
       });
 
       var self = this;
+
       this.jqLeft().click(function(){
         self.date = self.view.goPrev();
+      });
+
+      this.jqRight().click(function(){
+        self.date = self.view.goNext();
+      });
+
+      this.jqTitle().click(function(){
+        self.view.goUp();
       });
 
       this.jqInitialDate().click(function(event){
@@ -84,12 +92,19 @@ var K_ESC = 27;
       });
 
       this.jqCalendar().keydown(function(event){
-        if (event.which == K_ESC){
+        if (event.which == Util.Key.ESC)
           self.close();
-        }
+        else if(event.which == Util.Key.LEFT)
+          self.date = self.view.goPrev();
+        else if(event.which == Util.Key.RIGHT)
+          self.date = self.view.goNext();
+        else if(event.which == Util.Key.UP)
+          self.view.goUp();
+        else if(event.which == Util.Key.DOWN)
+          self.view.goDown();
       });
 
-      this.view = new View(ViewType.MONTH, this.jqCalendar(), this.jqTitle(), this.date, this.initialDate,
+      this.view = new View(Util.ViewType.MONTH, this.jqView(), this.jqTitle(), this.date, this.initialDate,
         function(date){
           self.jqCalendar().remove();
           if (self.completionHandler)
@@ -97,6 +112,11 @@ var K_ESC = 27;
         });
 
       this.jqCalendar().focus();
+
+      this.jqCalendar().css("width", this.jqCalendar().width());
+      this.jqCalendar().css("height", this.jqCalendar().height());
+      this.jqView().css("width", this.jqView().width());
+      this.jqView().css("height", this.jqView().height());
     },
 
     close: function(){

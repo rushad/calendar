@@ -1,16 +1,15 @@
-var Util;
 if (typeof module !== "undefined")
 {
   Util = require("./util.js");
 }
 
-var MONTH_NAMES = [ "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December" ];
-
 function Month(container, date, initialDate, completionHandler)
 {
-  if (!container || !container.is || !container.is(".ru_rushad_calendar"))
-    throw "Month: wrong calendar element";
+  var MONTH_NAMES = [ "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December" ];
+
+  if (!container || !container.is || !container.is(".ru_rushad_calendar_view"))
+    throw "Month: wrong container element";
 
   if (!date || !(date instanceof Date))
     throw "Month: wrong date";
@@ -22,10 +21,10 @@ function Month(container, date, initialDate, completionHandler)
     throw "Month: already exists";
 
   var month = {
-    id: Util().UUID(),
+    id: Util.UUID(),
     container: container,
-    date: date,
-    initialDate: initialDate,
+    date: new Date(date.getTime()),
+    initialDate: new Date(initialDate.getTime()),
     completionHandler: completionHandler,
 
     init: function(){
@@ -72,13 +71,12 @@ function Month(container, date, initialDate, completionHandler)
           var daySelector = $("#" + this.container.attr("id") + " #td" + y.toString() + x.toString());
           daySelector.text(dateIterator.getDate());
           daySelector.attr("date", dateIterator.getTime());
-          daySelector.css("cursor", "pointer");
           if (dateIterator.getMonth() != this.date.getMonth()){
-            daySelector.css("color", "silver");
+            daySelector.css("color", Util.Style.Color.DayOutOfMonth);
           }
           if (dateIterator.getTime() == this.initialDate.getTime()){
-            daySelector.css("color", "blue");
-            daySelector.css("font-weight", "bold");
+            daySelector.css("color", Util.Style.Color.InitialDay);
+            daySelector.css("font-weight", Util.Style.FontWeight.InitialDay);
           }
           daySelector.click(this, function(event){
             var selDate = new Date();
@@ -86,11 +84,11 @@ function Month(container, date, initialDate, completionHandler)
             event.data.completionHandler(selDate);
           });
           daySelector.hover(function(){
-              $(this).css("box-shadow", "2px 2px 5px #888888");
-              $(this).css("background-color", "white");
-            }, function() {
-              $(this).css("box-shadow", "none");
-              $(this).css("background-color", "whitesmoke");
+            $(this).css("box-shadow", Util.Style.BoxShadow.Hover);
+            $(this).css("background-color", Util.Style.BackgroundColor.Hover);
+          }, function() {
+            $(this).css("box-shadow", Util.Style.BoxShadow.Normal);
+            $(this).css("background-color", Util.Style.BackgroundColor.Normal);
           });
           dateIterator = this.addDays(dateIterator, 1);
         }
@@ -101,14 +99,19 @@ function Month(container, date, initialDate, completionHandler)
       this.jqMonth().remove();
     },
 
-    prev: function(date)
-    {
+    prev: function(date){
       var newDate = new Date(date.getTime());
       newDate.setDate(1);
       newDate.setTime(newDate.getTime() - 1*24*60*60*1000);
       return newDate;
-    }
+    },
 
+    next: function(date){
+      var newDate = new Date(date.getTime());
+      newDate.setDate(1);
+      newDate.setTime(newDate.getTime() + 31*24*60*60*1000);
+      return newDate;
+    }
   };
 
   month.init(date);

@@ -134,7 +134,7 @@ describe("Calendar: ", function(){
     var cal2 = new Calendar();
 
     var event = $.Event("keydown");
-    event.which = 27;
+    event.which = Util.Key.ESC;
     cal1.jqCalendar().trigger(event);
 
     assert.equal(cal1.jqCalendar().length, 0);
@@ -193,6 +193,110 @@ describe("Calendar: ", function(){
 
     assert.equal(result, true);
     assert.equal(selectedDate.getTime(), new Date(1972, 4, 8).getTime());
+  });
+
+  it("should call View.goPrev() when left arrow clicked or key pressed", function(){
+    var goPrevCalled = false;
+    function TestView(){
+      return {
+        goPrev: function(){
+          goPrevCalled = true;
+        }
+      };
+    }
+
+    var view = new TestView();
+    var cal = new Calendar();
+    cal.view = view;
+
+    cal.jqLeft().click();
+
+    assert.equal(goPrevCalled, true);
+
+    goPrevCalled = false;
+
+    var event = $.Event("keydown");
+    event.which = Util.Key.LEFT;
+    cal.jqCalendar().trigger(event);
+
+    assert.equal(goPrevCalled, true);
+
+  });
+
+  it("should call View.goNext() when right arrow clicked or key pressed", function(){
+    var goNextCalled = false;
+    function TestView(){
+      return {
+        goNext: function(){
+          goNextCalled = true;
+        }
+      };
+    }
+
+    var view = new TestView();
+    var cal = new Calendar();
+    cal.view = view;
+
+    cal.jqRight().click();
+
+    assert.equal(goNextCalled, true);
+
+    goNextCalled = false;
+
+    var event = $.Event("keydown");
+    event.which = Util.Key.RIGHT;
+    cal.jqCalendar().trigger(event);
+
+    assert.equal(goNextCalled, true);
+
+  });
+
+  it("should call View.goUp() when title clicked or up key pressed", function(){
+    var goUpCalled = false;
+    function TestView(){
+      return {
+        goUp: function(){
+          goUpCalled = true;
+        }
+      };
+    }
+
+    var view = new TestView();
+    var cal = new Calendar();
+    cal.view = view;
+
+    cal.jqTitle().click();
+
+    assert.equal(goUpCalled, true);
+
+    goUpCalled = false;
+
+    var event = $.Event("keydown");
+    event.which = Util.Key.UP;
+    cal.jqCalendar().trigger(event);
+
+    assert.equal(goUpCalled, true);
+  });
+
+  it("should call View.goDown() when down key pressed", function(){
+    var goDownCalled = false;
+    function TestView(){
+      return {
+        goDown: function(){
+          goDownCalled = true;
+        }
+      };
+    }
+
+    var view = new TestView();
+    var cal = new Calendar();
+    cal.view = view;
+
+    var event = $.Event("keydown");
+    event.which = Util.Key.DOWN;
+    cal.jqCalendar().trigger(event);
+
+    assert.equal(goDownCalled, true);
   });
 
 });

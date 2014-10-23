@@ -11,8 +11,8 @@ describe("Month: ", function(){
     document = jsdom.jsdom("");
     window = document.parentWindow;
     $ = jquery(window);
-    container1 = $("<div id='id1' class='ru_rushad_calendar'></div>");
-    container2 = $("<div id='id2' class='ru_rushad_calendar'></div>");
+    container1 = $("<div id='id1' class='ru_rushad_calendar_view'></div>");
+    container2 = $("<div id='id2' class='ru_rushad_calendar_view'></div>");
     $("body").append(container1);
     $("body").append(container2);
     done();
@@ -49,6 +49,13 @@ describe("Month: ", function(){
     assert.doesNotThrow(function(){
       new Month(container1, new Date(), new Date());
     });
+  });
+
+  it("should clone date and initialDate", function(){
+    var date = new Date(1972, 4, 8);
+    var mon = new Month(container1, date, date);
+    assert.notEqual(mon.date, date);
+    assert.notEqual(mon.initialDate, date);
   });
 
   it("should create DOM element in container", function(){
@@ -88,21 +95,35 @@ describe("Month: ", function(){
   it("should set color of days out of current month to silver", function(){
     var date = new Date(1972, 4, 8);
     var mon = new Month(container1, date, date);
-    assert.equal($("#id1 #td17").css("color"), "silver");
+    assert.equal($("#id1 #td17").css("color"), Util.Style.Color.DayOutOfMonth);
   });
 
   it("should set color of initial date to blue", function(){
     var date = new Date(1972, 4, 8);
     var mon = new Month(container1, date, date);
-    assert.equal($("#id1 #td31").css("color"), "blue");
+    assert.equal($("#id1 #td31").css("color"), Util.Style.Color.InitialDay);
   });
 
   it("day should be shadowed when mouse is over", function(){
     var date = new Date();
     var mon = new Month(container1, date, date);
     $("#id1 #td11").mouseenter();
-    assert.equal($("#id1 #td11").css("box-shadow"), "2px 2px 5px #888888");
+    assert.equal($("#id1 #td11").css("box-shadow"), Util.Style.BoxShadow.Hover);
     $("#id1 #td11").mouseleave();
-    assert.equal($("#id1 #td11").css("box-shadow"), "none");
+    assert.equal($("#id1 #td11").css("box-shadow"), Util.Style.BoxShadow.Normal);
+  });
+
+  it("prev should return the date in previous month", function(){
+    var date = new Date(2014, 0, 31);
+    var mon = new Month(container1, date, date);
+    var prevDate = mon.prev(date);
+    assert.equal(prevDate.getMonth(), 11);
+  });
+
+  it("next should return the date in next month", function(){
+    var date = new Date(2013, 11, 1);
+    var mon = new Month(container1, date, date);
+    var nextDate = mon.next(date);
+    assert.equal(nextDate.getMonth(), 0);
   });
 });
