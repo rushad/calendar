@@ -85,26 +85,40 @@ describe("Decade: ", function(){
     assert.equal(decade.title(), "1970-1979");
   });
 
+  it("should fill years", function(){
+    var date = new Date(1972, 4, 8);
+    var decade = new Decade(container1, date, date);
+    assert.equal($("#" + decade.id + " #td2").text(), "1970");
+    assert.equal($("#" + decade.id + " #td11").text(), "1979");
+  });
+
+  it("should set color of years out of decade to silver", function(){
+    var date = new Date();
+    var decade = new Decade(container1, date, date);
+    assert.equal($("#" + decade.id + " #td1").css("color"), Util.Style.Color.DateOutOfPeriod);
+    assert.equal($("#" + decade.id + " #td12").css("color"), Util.Style.Color.DateOutOfPeriod);
+  });
+
   it("year should be shadowed when mouse is over", function(){
     var date = new Date();
     var decade = new Decade(container1, date, date);
-    $("#id1 #td01").mouseenter();
-    assert.equal($("#id1 #td01").css("box-shadow"), Util.Style.BoxShadow.Hover);
-    $("#id1 #td01").mouseleave();
-    assert.equal($("#id1 #td01").css("box-shadow"), Util.Style.BoxShadow.Normal);
+    $("#id1 #td1").mouseenter();
+    assert.equal($("#id1 #td1").css("box-shadow"), Util.Style.BoxShadow.Hover);
+    $("#id1 #td1").mouseleave();
+    assert.equal($("#id1 #td1").css("box-shadow"), Util.Style.BoxShadow.Normal);
   });
 
   it("prev should return the date in previous decade", function(){
     var date = new Date(2014, 0, 1);
     var decade = new Decade(container1, date, date);
     var prevDate = decade.prev(date);
-    assert.equal(prevDate.getFullYear(), 2013);
+    assert.equal(Math.floor(prevDate.getFullYear()/10)*10, 2000);
   });
 
   it("next should return the date in next decade", function(){
     var date = new Date(2013, 11, 31);
     var decade = new Decade(container1, date, date);
     var nextDate = decade.next(date);
-    assert.equal(nextDate.getFullYear(), 2014);
+    assert.equal(Math.floor(nextDate.getFullYear()/10)*10, 2020);
   });
 });

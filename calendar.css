@@ -19,23 +19,32 @@
 
 .ru_rushad_calendar_view {
   margin-top: 5px;
+  position: relative;
+  white-space: nowrap;
 }
 
 .ru_rushad_calendar td {
   cursor: pointer;
 }
 
-.ru_rushad_calendar_year, .ru_rushad_calendar_decade {
+.ru_rushad_calendar_month,
+.ru_rushad_calendar_year, 
+.ru_rushad_calendar_decade,
+.ru_rushad_calendar_moving {
+  display: inline-block;
   height: 100%;
   width: 100%;
 }
 
-.ru_rushad_calendar_year table, .ru_rushad_calendar_decade table {
+.ru_rushad_calendar_month table,
+.ru_rushad_calendar_year table, 
+.ru_rushad_calendar_decade table,
+.ru_rushad_calendar_moving table {
   height: 100%;
   width: 100%;
 }
 
-.ru_rushad_calendar_month th {
+.ru_rushad_calendar th {
   font-weight: normal;
   width: 14.28%;
   padding-left: 3px;

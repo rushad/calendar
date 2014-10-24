@@ -48,7 +48,7 @@ describe("View: ", function(){
     assert.equal(typeof view.view, "object");
     assert.equal(typeof view.view.jqMonth, "function");
   });
-
+/*
   it("should switch to year from month on goUp() call", function(){
     var date = new Date(1972, 4, 8);
     var view = new View(Util.ViewType.MONTH, container, $("#title"), date, date);
@@ -68,7 +68,7 @@ describe("View: ", function(){
     assert.equal(view.type, Util.ViewType.DECADE);
     assert.equal(typeof view.view.jqDecade, "function");
   });
-
+*/
   it("should switch to month from year on goDown() call", function(){
     var date = new Date(1972, 4, 8);
     var view = new View(Util.ViewType.YEAR, container, $("#title"), date, date);
@@ -77,6 +77,16 @@ describe("View: ", function(){
 
     assert.equal(view.type, Util.ViewType.MONTH);
     assert.equal(typeof view.view.jqMonth, "function");
+  });
+
+  it("should switch to year from decade on goDown() call", function(){
+    var date = new Date(1972, 4, 8);
+    var view = new View(Util.ViewType.DECADE, container, $("#title"), date, date);
+
+    view.goDown();
+
+    assert.equal(view.type, Util.ViewType.YEAR);
+    assert.equal(typeof view.view.jqYear, "function");
   });
 });
 

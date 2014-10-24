@@ -95,7 +95,7 @@ describe("Month: ", function(){
   it("should set color of days out of current month to silver", function(){
     var date = new Date(1972, 4, 8);
     var mon = new Month(container1, date, date);
-    assert.equal($("#id1 #td17").css("color"), Util.Style.Color.DayOutOfMonth);
+    assert.equal($("#id1 #td17").css("color"), Util.Style.Color.DateOutOfPeriod);
   });
 
   it("should set color of initial date to blue", function(){

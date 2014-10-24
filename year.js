@@ -3,7 +3,7 @@ if (typeof module !== "undefined")
   Util = require("./util.js");
 }
 
-function Year(container, date, initialDate, completionHandler)
+function Year(container, date, initialDate, prepend, completionHandler)
 {
   if (!container || !container.is || !container.is(".ru_rushad_calendar_view"))
     throw "Year: wrong container element";
@@ -37,7 +37,10 @@ function Year(container, date, initialDate, completionHandler)
         </div> \
       ");
 
-      this.container.append(frame);
+      if (prepend)
+        this.container.prepend(frame);
+      else
+        this.container.append(frame);
 
       $("#" + this.id + " td").hover(function(){
         $(this).css("box-shadow", Util.Style.BoxShadow.Hover);
@@ -50,8 +53,14 @@ function Year(container, date, initialDate, completionHandler)
       $("#" + this.id + " td").click(this, function(e){
         var self = e.data;
         self.date.setMonth($(this).attr("month"));
+        var rect = {
+          left: $(this).position().left,
+          top: $(this).position().top,
+          width: $(this).css("width"),
+          height: $(this).css("height")
+        };
         self.close();
-        self.completionHandler(true, self.date);
+        self.completionHandler(true, self.date, rect);
       });
     },
 
@@ -81,6 +90,16 @@ function Year(container, date, initialDate, completionHandler)
       newDate.setMonth(11);
       newDate.setTime(newDate.getTime() + 31*24*60*60*1000);
       return newDate;
+    },
+
+    rectInPeriod: function(){
+      var rect = {};
+      var num = (this.date.getFullYear() % 10) + 1;
+      rect.left = Math.floor(num % 4) * 25 + "%";
+      rect.top = Math.floor(num / 4) * 25 + "%";
+      rect.width = "25%";
+      rect.height = "25%";
+      return rect;
     }
   };
 

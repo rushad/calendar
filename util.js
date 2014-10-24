@@ -33,7 +33,7 @@ var Util = {
       Normal: "none"
     },
     Color: {
-      DayOutOfMonth: "silver",
+      DateOutOfPeriod: "silver",
       InitialDay: "blue"
     },
     FontWeight: {

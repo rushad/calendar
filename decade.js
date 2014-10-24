@@ -3,7 +3,7 @@ if (typeof module !== "undefined")
   Util = require("./util.js");
 }
 
-function Decade(container, date, initialDate, completionHandler)
+function Decade(container, date, initialDate, prepend, completionHandler)
 {
   if (!container || !container.is || !container.is(".ru_rushad_calendar_view"))
     throw "Decade: wrong container element";
@@ -29,15 +29,24 @@ function Decade(container, date, initialDate, completionHandler)
         <div id='" + this.id + "' class='ru_rushad_calendar_decade'> \
           <table> \
             <tbody> \
-              <tr><td id='td01'>2009<td id='td02'>2010<td id='td03'>2011<td id='td04'>2012</tr> \
-              <tr><td id='td05'>2013<td id='td06'>2014<td id='td07'>2015<td id='td08'>2016</tr> \
-              <tr><td id='td09'>2017<td id='td10'>2018<td id='td11'>2019<td id='td12'>2020</tr> \
+              <tr><td id='td1'><td id='td2'><td id='td3'><td id='td4'></tr> \
+              <tr><td id='td5'><td id='td6'><td id='td7'><td id='td8'></tr> \
+              <tr><td id='td9'><td id='td10'><td id='td11'><td id='td12'></tr> \
             </tbody> \
           </table> \
         </div> \
       ");
 
-      this.container.append(frame);
+      if (prepend)
+        this.container.prepend(frame);
+      else
+        this.container.append(frame);
+
+      var y = Math.floor(this.date.getFullYear() / 10) * 10 - 1;
+      for (var i = 1; i <= 12; i++)
+        $("#" + this.id + " #td" + i).text(y++);
+      $("#" + this.id + " #td1").css("color", Util.Style.Color.DateOutOfPeriod);
+      $("#" + this.id + " #td12").css("color", Util.Style.Color.DateOutOfPeriod);
 
       $("#" + this.id + " td").hover(function(){
         $(this).css("box-shadow", Util.Style.BoxShadow.Hover);
@@ -49,9 +58,15 @@ function Decade(container, date, initialDate, completionHandler)
 
       $("#" + this.id + " td").click(this, function(e){
         var self = e.data;
-//        self.date.setMonth($(this).attr("month"));
+        self.date.setYear($(this).text());
+        var rect = {
+          left: $(this).position().left,
+          top: $(this).position().top,
+          width: $(this).css("width"),
+          height: $(this).css("height")
+        };
         self.close();
-        self.completionHandler(true, self.date);
+        self.completionHandler(true, self.date, rect);
       });
     },
 
@@ -70,17 +85,19 @@ function Decade(container, date, initialDate, completionHandler)
 
     prev: function(date){
       var newDate = new Date(date.getTime());
-/*      newDate.setDate(1);
+      newDate.setDate(1);
       newDate.setMonth(0);
-      newDate.setTime(newDate.getTime() - 1*24*60*60*1000);*/
+      newDate.setFullYear(Math.floor(date.getFullYear()/10)*10);
+      newDate.setTime(newDate.getTime() - 10*(365.2425-1)*24*60*60*1000);
       return newDate;
     },
 
     next: function(date){
       var newDate = new Date(date.getTime());
-/*      newDate.setDate(1);
-      newDate.setMonth(11);
-      newDate.setTime(newDate.getTime() + 31*24*60*60*1000);*/
+      newDate.setDate(1);
+      newDate.setMonth(0);
+      newDate.setFullYear(Math.floor(date.getFullYear()/10)*10);
+      newDate.setTime(newDate.getTime() + 10*(365.2425+1)*24*60*60*1000);
       return newDate;
     }
   };

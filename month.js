@@ -3,7 +3,7 @@ if (typeof module !== "undefined")
   Util = require("./util.js");
 }
 
-function Month(container, date, initialDate, completionHandler)
+function Month(container, date, initialDate, prepend, completionHandler)
 {
   var MONTH_NAMES = [ "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December" ];
@@ -45,7 +45,10 @@ function Month(container, date, initialDate, completionHandler)
           </table> \
         </div> \
       ");
-      this.container.append(frame);
+      if (prepend)
+        this.container.prepend(frame);
+      else
+        this.container.append(frame);
       this.fill();
     },
 
@@ -68,11 +71,11 @@ function Month(container, date, initialDate, completionHandler)
       dateIterator = this.addDays(dateIterator, -daysToSubtract[dateIterator.getDay()]);
       for (var y = 1; y <= 6; y++){
         for (var x = 1; x <= 7; x++){
-          var daySelector = $("#" + this.container.attr("id") + " #td" + y.toString() + x.toString());
+          var daySelector = $("#" + this.id + " #td" + y.toString() + x.toString());
           daySelector.text(dateIterator.getDate());
           daySelector.attr("date", dateIterator.getTime());
           if (dateIterator.getMonth() != this.date.getMonth()){
-            daySelector.css("color", Util.Style.Color.DayOutOfMonth);
+            daySelector.css("color", Util.Style.Color.DateOutOfPeriod);
           }
           if (dateIterator.getTime() == this.initialDate.getTime()){
             daySelector.css("color", Util.Style.Color.InitialDay);
@@ -111,6 +114,15 @@ function Month(container, date, initialDate, completionHandler)
       newDate.setDate(1);
       newDate.setTime(newDate.getTime() + 31*24*60*60*1000);
       return newDate;
+    },
+
+    rectInPeriod: function(){
+      var rect = {};
+      rect.left = Math.floor(this.date.getMonth() % 4) * 25 + "%";
+      rect.top = Math.floor(this.date.getMonth() / 4) * 25 + "%";
+      rect.width = "25%";
+      rect.height = "25%";
+      return rect;
     }
   };
 
