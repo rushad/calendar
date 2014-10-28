@@ -18,6 +18,7 @@ function View(type, container, title, date, initialDate, completionHandler)
     view: null,
     fromRect: null,
     toRect: null,
+    mouseX: null,
 
     init: function(type, toRight){
       this.type = type;
@@ -154,6 +155,16 @@ function View(type, container, title, date, initialDate, completionHandler)
   };
 
   view.init(type);
+
+  $(view.container).mousedown(function(e){
+    this.mouseX = e.clientX;
+  }.bind(view));
+  $(view.container).mouseup(function(e){
+    if (e.clientX - this.mouseX > 50)
+      this.goNext();
+    else if (e.clientX - this.mouseX < -50)
+      this.goPrev();
+  }.bind(view));
 
   return view;
 }
