@@ -99,11 +99,13 @@ function View(type, container, title, date, initialDate, completionHandler)
       var view = this.view;
       $("#" + view.id).removeClass($("#" + view.id).attr("class"));
       $("#" + view.id).addClass("ru_rushad_calendar_moving");
-      this.container.animate({"margin-left": "-" + $("#" + view.id).width()}, "fast", function() {
+
+      this.container.css("margin-left", -this.container.width());
+      this.container.animate({"margin-left": 0}, "fast", function() {
         view.close();
-        $(this).css("margin-left", "0");
       });
-      this.init(this.type, false);
+      this.init(this.type, true);
+      
       return this.date;
     },
 
@@ -112,11 +114,13 @@ function View(type, container, title, date, initialDate, completionHandler)
       var view = this.view;
       $("#" + view.id).removeClass($("#" + view.id).attr("class"));
       $("#" + view.id).addClass("ru_rushad_calendar_moving");
-      this.container.css("margin-left", -this.container.width());
-      this.container.animate({"margin-left": 0}, "fast", function() {
+
+      this.container.animate({"margin-left": "-" + $("#" + view.id).width()}, "fast", function() {
         view.close();
+        $(this).css("margin-left", "0");
       });
-      this.init(this.type, true);
+      this.init(this.type, false);
+
       return this.date;
     },
 
@@ -161,9 +165,9 @@ function View(type, container, title, date, initialDate, completionHandler)
   }.bind(view));
   $(view.container).mouseup(function(e){
     if (e.clientX - this.mouseX > 50)
-      this.goNext();
-    else if (e.clientX - this.mouseX < -50)
       this.goPrev();
+    else if (e.clientX - this.mouseX < -50)
+      this.goNext();
   }.bind(view));
 
   return view;
